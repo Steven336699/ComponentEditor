@@ -1,0 +1,161 @@
+#include <LiquidCrystal.h>
+int Red_Indicator =6;      //intialization of red indiator for full level of  dustbin
+int Blue_Indicator=7;      //intialization of blue indiator for middle level of  dustbin
+int Green_Indicator=8;     //intialization of  green indiator for ground level of  dustbin
+int trigPin = 10;            //intialization of trigPin for ultrasonic sensor
+int echoPin = 9;            //intialization of EchoPin for ultrasonic sensor
+
+int trigPin1= 13;            //intialization of trigPin for ultrasonic sensor
+int echoPin1 = 14;            //intialization of EchoPin for ultrasonic sensor
+const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+
+void setup() {
+
+lcd.begin(16, 2);
+lcd.setCursor(0, 0);
+
+Serial.begin (9600);
+pinMode(trigPin, OUTPUT); 
+pinMode(echoPin, INPUT);
+
+
+
+pinMode(trigPin1, OUTPUT); 
+pinMode(echoPin1, INPUT);
+pinMode(Red_Indicator, OUTPUT);  
+pinMode(Blue_Indicator, OUTPUT);  
+pinMode(Green_Indicator, OUTPUT);  
+} 
+
+
+void loop() 
+{
+ long duration,distance,duration1,distance1;
+ float level,level1;
+ digitalWrite(trigPin, LOW); // clears the trigPin
+ delayMicroseconds(2);
+
+ digitalWrite(trigPin, HIGH);//Sets the triPin on High state for 10 seconds
+ delayMicroseconds(10);
+
+ duration = pulseIn(echoPin, HIGH);//Reads the  echoPin, returns the sound wave travely=time in microseconds
+
+ distance = (duration/2) / 29.1;//calaculating the distance in cm
+ 
+ 
+ level=distance*(33.33/100); //  calaculation of level interm of  3 level of dustbin
+ 
+ digitalWrite(trigPin1, LOW); // clears the trigPin
+ delayMicroseconds(2);
+
+ digitalWrite(trigPin1, HIGH);//Sets the triPin on High state for 10 seconds
+ delayMicroseconds(10);
+
+ duration1 = pulseIn(echoPin1, HIGH);//Reads the  echoPin, returns the sound wave travely=time in microseconds
+
+ distance1= (duration1/2) / 29.1;//calaculating the distance in cm
+ 
+  level1=distance1*(33.33/100); //  calaculation of level interm of  3 level of dustbin
+ 
+
+
+ if (distance >=0 && distance <= level)
+ {
+  digitalWrite(Red_Indicator,LOW);
+
+ Serial.println(" Dustbin is almost full\n");
+ Serial.print(distance);
+ Serial.println(" cm");
+
+  lcd.print("level is above threshold");
+  lcd.setCursor(0, 1);
+  lcd.print("more than 75%");
+  delay(1000);
+  lcd.clear();
+ }
+ else if(distance >= ++level && distance <=level*2)
+  {
+    
+   digitalWrite(Blue_Indicator, HIGH);
+
+  lcd.print(" level is at normal");
+  lcd.setCursor(0, 1);
+  lcd.print("level is at 50%!");
+  delay(1000);
+  lcd.clear();
+   Serial.println("level position is at middle \n");
+   Serial.print(distance);
+   Serial.println(" cm");
+  }
+ else
+  {
+    
+  digitalWrite(Green_Indicator, HIGH);
+
+  lcd.print("Level is at ground level ");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Below 30%! ");
+  delay(1000);
+  lcd.clear();
+   Serial.println("It is at ground level \n");
+   Serial.print(distance);
+   Serial.println(" cm");
+     }
+delay(1000);
+
+if (distance1>=0 && distance1 <= level1)
+ {
+  digitalWrite(Red_Indicator,LOW);
+
+ Serial.println(" Dustbin is almost full\n");
+ Serial.print(distance1);
+ Serial.println(" cm");
+
+  lcd.print("level is above threshold");
+  lcd.setCursor(0, 1);
+  lcd.print("more than 75%");
+  delay(1000);
+  lcd.clear();
+ }
+ else if(distance1 >= ++level1 && distance1 <=level1 *2)
+  {
+    
+   digitalWrite(Blue_Indicator, HIGH);
+
+  lcd.print(" level is at normal");
+  lcd.setCursor(0, 1);
+  lcd.print("level is at 50%!");
+  delay(1000);
+  lcd.clear();
+   Serial.println("level position is at middle \n");
+   Serial.print(distance1);
+   Serial.println(" cm");
+  }
+ else
+  {
+    
+  digitalWrite(Green_Indicator, HIGH);
+
+  lcd.print("Level is at ground level ");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Below 30%! ");
+  delay(1000);
+  lcd.clear();
+   Serial.println("It is at ground level \n");
+   Serial.print(distance1);
+   Serial.println(" cm");
+     }
+delay(1000);
+
+
+
+
+
+
+}
+
+
